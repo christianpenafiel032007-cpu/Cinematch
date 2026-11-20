@@ -136,8 +136,8 @@
       if (m.index > last) frag.appendChild(document.createTextNode(t.slice(last, m.index)));
       var d = MAP[m[1]], tpl = document.createElement("template");
       tpl.innerHTML = window.CMIcon(d[0], "t-" + d[1] + (d[2] ? " " + d[2] : "") + " i-" + d[0] + (m[2] && m.index + m[0].length < t.length ? " sp" : ""));
-      if (m[2] && m.index + m[0].length >= t.length) frag.appendChild(document.createTextNode(" "));
       frag.appendChild(tpl.content.firstChild);
+      if (m[2] && m.index + m[0].length >= t.length) frag.appendChild(document.createTextNode(" "));
       last = RE.lastIndex;
     }
     if (last < t.length) frag.appendChild(document.createTextNode(t.slice(last)));
