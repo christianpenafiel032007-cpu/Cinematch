@@ -41,7 +41,7 @@
     meta("name", "twitter:card", "summary");
     if (!h.querySelector("link[rel~=icon]")) {
       var l = document.createElement("link"); l.rel = "icon";
-      l.href = "data:image/svg+xml," + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>");
+      l.href = "data:image/svg+xml," + encodeURIComponent(window.CMIcon ? "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='#15112a'/><g transform='translate(4 4)' fill='none' stroke='#ffb627' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>" + window.CMIcon("clapperboard").slice(window.CMIcon("clapperboard").indexOf(">") + 1).replace("</" + "svg>", "") + "</g></svg>" : "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>");
       h.appendChild(l);
     }
     ["https://api.themoviedb.org", "https://image.tmdb.org", "https://en.wikipedia.org"].forEach(function (u) {

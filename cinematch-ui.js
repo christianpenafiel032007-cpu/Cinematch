@@ -109,8 +109,10 @@
   /* ---------- FORM UPGRADES ---------- */
   var quiz = $("quiz"); if (!quiz) return;
 
-  safe(function () { // mood tiles: emoji on top
+  safe(function () { // mood tiles: icon (or emoji) on top
     quiz.querySelectorAll(".tiles .chip span").forEach(function (s) {
+      var ic = s.querySelector("svg.cm-i");
+      if (ic) { var em = document.createElement("em"); ic.classList.remove("sp"); em.appendChild(ic); s.insertBefore(em, s.firstChild); return; }
       var t = s.textContent.trim(), i = t.indexOf(" ");
       if (i > 0) s.innerHTML = "<em>" + t.slice(0, i) + "</em>" + t.slice(i + 1);
     });
