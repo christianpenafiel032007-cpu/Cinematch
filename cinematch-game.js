@@ -57,6 +57,14 @@
     ".cmg-sc .poster{position:relative;flex:1;min-height:0;display:grid;place-items:center;overflow:hidden}",
     ".cmg-sc .poster img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}",
     ".cmg-sc img,.cmg-sc svg{pointer-events:none;-webkit-user-drag:none;user-select:none}",
+    /* guess mode: poster zoomed in (crops printed titles) until the title is revealed */
+    ".cmg-sc .poster img{transition:transform .5s ease,filter .5s ease}",
+    ".cmg-sc.hidden-t .poster img{transform:scale(1.35);filter:blur(12px) saturate(1.15)}",
+    ".cmg-mask{letter-spacing:.35em;color:var(--muted)}",
+    ".cmg-info .btn{margin-top:10px}",
+    ".cmg-got{margin-top:10px;padding:7px 14px;border-radius:99px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--text);font:700 .84rem 'DM Sans',sans-serif;cursor:pointer;transition:background .15s,border-color .15s,color .15s}",
+    ".cmg-got[aria-pressed=true]{background:rgba(74,222,154,.16);border-color:#4ade9a;color:#4ade9a}",
+    ".cmg-got:focus-visible{outline:3px solid var(--amber);outline-offset:2px}",
     ".cmg-sc .poster .art{width:42%;opacity:.85}",
     ".cmg-info{padding:14px 16px 16px;background:linear-gradient(180deg,rgba(21,17,42,.6),var(--panel))}",
     ".cmg-info h3{margin:0 0 4px;font:800 1.3rem 'Fraunces',Georgia,serif}",
@@ -110,7 +118,7 @@
     ".cmg-fb.ok{color:#4ade9a}.cmg-fb.no{color:#ff9fb5}",
     ".cmg-next{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}",
     "@media(max-width:640px){.cmg-cards{grid-template-columns:1fr}.cmg-opts{grid-template-columns:1fr}.cmg-stack{height:min(500px,62vh);min-height:360px}.cmg-acts{gap:12px}.cmg-panel{padding-left:12px;padding-right:12px}}",
-    "@media(prefers-reduced-motion:reduce){.cmg-sc,.cmg-rb,.cmg-opt,.cmg-bar i{transition:none!important}.cmg-panel.open,.cmg-hints span{animation:none}}"
+    "@media(prefers-reduced-motion:reduce){.cmg-sc,.cmg-sc .poster img,.cmg-rb,.cmg-opt,.cmg-bar i{transition:none!important}.cmg-panel.open,.cmg-hints span{animation:none}}"
   ].join("");
   var st = document.createElement("style"); st.id = "cmGameCss"; st.textContent = css; document.head.appendChild(st);
 
@@ -123,7 +131,7 @@
   function hubHtml() {
     var persona = LS.get("cm_game_persona", null), best = LS.get("cm_game_best", null);
     hub.innerHTML = '<div class="section-title"><h2 id="cmgHubTitle">🎲 Movie games</h2><p>Play a quick round, then get picks that fit you</p></div><div class="cmg-cards">' +
-      '<article class="cmg-gc"><span class="cmg-ico">🔥</span><h3>Swipe Night</h3><p>Swipe through movies you’ve seen. Love it or not, your swipes reveal your movie personality and power your picks.</p>' +
+      '<article class="cmg-gc"><span class="cmg-ico">🔥</span><h3>Swipe Night</h3><p>Guess each movie from its poster, then swipe: loved it or not. Your swipes reveal your movie personality and power your picks.</p>' +
       '<span class="cmg-meta">' + (persona && persona.name ? "Last result: <b>" + esc(persona.name) + "</b>" : "12 cards · about 1 minute") + "</span>" +
       '<button type="button" class="btn" data-cmg-play="swipe">▶ Play Swipe Night</button></article>' +
       '<article class="cmg-gc"><span class="cmg-ico">🎞</span><h3>Plot Twist</h3><p>Guess the movie from its one-line plot. Wrong guesses unlock hints, but each hint costs a point.</p>' +
@@ -208,7 +216,7 @@
   }
 
   function startSwipe() {
-    SW = {deck: buildDeck(), i: 0, ratings: {}, loved: [], nope: []};
+    SW = {deck: buildDeck(), i: 0, ratings: {}, loved: [], nope: [], guessed: 0, seen: 0};
     openPanel("Swipe Night");
     drawSwipe();
   }
@@ -217,15 +225,17 @@
     var d = SW.deck, i = SW.i;
     if (i >= d.length) { swipeResult(); return; }
     var m = d[i], next = d[i + 1], rated = SW.loved.length + SW.nope.length;
+    SW.revealed = false; SW.gotIt = false;
     body.innerHTML =
       '<div class="cmg-bar" aria-hidden="true"><i style="width:' + (i / d.length * 100) + '%"></i></div>' +
-      '<div class="cmg-row"><span>Card <b>' + (i + 1) + "</b> of " + d.length + "</span><span>♥ <b>" + SW.loved.length + "</b> loved · 👎 <b>" + SW.nope.length + "</b> not for me</span></div>" +
+      '<div class="cmg-row"><span>Card <b>' + (i + 1) + "</b> of " + d.length + " · ✨ <b>" + SW.guessed + "</b> guessed</span><span>♥ <b>" + SW.loved.length + "</b> loved · 👎 <b>" + SW.nope.length + "</b> not for me</span></div>" +
       '<div class="cmg-stack">' +
-        (next ? '<div class="cmg-sc back" aria-hidden="true">' + posterHtml(next) + '<div class="cmg-info"><h3>' + esc(next.t) + "</h3></div></div>" : "") +
-        '<div class="cmg-sc" id="cmgCard" tabindex="0" role="group" aria-roledescription="movie card" aria-label="' + esc(m.t + ", " + m.y + ". Use the buttons or arrow keys: right loved it, left not for me, up haven’t seen it.") + '">' +
+        (next ? '<div class="cmg-sc back hidden-t" aria-hidden="true">' + posterHtml(next) + '<div class="cmg-info"><h3 class="cmg-mask">? ? ? ? ?</h3></div></div>' : "") +
+        '<div class="cmg-sc hidden-t" id="cmgCard" tabindex="0" role="group" aria-roledescription="movie card" aria-label="Mystery movie. Guess the title from the poster, then press Enter to reveal it. Arrow keys: right loved it, left not for me, up haven’t seen it.">' +
           '<span class="cmg-stamp love" aria-hidden="true">LOVED</span><span class="cmg-stamp nope" aria-hidden="true">NOPE</span><span class="cmg-stamp skip" aria-hidden="true">NOT SEEN</span>' +
           posterHtml(m) +
-          '<div class="cmg-info"><h3>' + esc(m.t) + "</h3><p>" + m.y + " · " + esc(m.g.join(", ")) + "</p></div>" +
+          '<div class="cmg-info" id="cmgInfo" aria-live="polite"><h3 class="cmg-mask" aria-hidden="true">? ? ? ? ?</h3><p>Guess the movie from its poster</p>' +
+            '<button type="button" class="btn sm" data-reveal>✨ Reveal title</button></div>' +
         "</div>" +
       "</div>" +
       '<div class="cmg-acts">' +
@@ -233,11 +243,12 @@
         '<button type="button" class="cmg-rb sm skip" data-sw="skip" aria-label="Haven’t seen it">⬆<span>Not seen</span></button>' +
         '<button type="button" class="cmg-rb love" data-sw="love" aria-label="Loved it">♥<span>Loved</span></button>' +
       "</div>" +
-      '<p class="cmg-hint">Swipe the card, tap a button, or use ← ↑ → keys.' +
+      '<p class="cmg-hint">Guess the title, tap the card to reveal it, then swipe or use ← ↑ → keys.' +
       (rated >= 4 && SW.loved.length ? ' <button type="button" class="cmg-link" data-sw="finish">See my result now</button>' : "") + "</p>";
     hydratePosters(body);
     var card = $("cmgCard");
     bindDrag(card);
+    card.querySelector("[data-reveal]").addEventListener("click", reveal);
     body.querySelectorAll("[data-sw]").forEach(function (b) {
       b.addEventListener("click", function () { var k = b.getAttribute("data-sw"); if (k === "finish") swipeResult(); else decide(k); });
     });
@@ -245,8 +256,28 @@
       if (e.key === "ArrowRight") { e.preventDefault(); decide("love"); }
       else if (e.key === "ArrowLeft") { e.preventDefault(); decide("nope"); }
       else if (e.key === "ArrowUp") { e.preventDefault(); decide("skip"); }
+      else if ((e.key === "Enter" || e.key === " ") && !SW.revealed && !(e.target.closest && e.target.closest("button"))) { e.preventDefault(); reveal(); }
     };
     if (document.activeElement === document.body || !panel.contains(document.activeElement)) card.focus({preventScroll: true});
+  }
+
+  /* Show the title (poster zooms out). Then the player can mark whether they guessed it. */
+  function reveal() {
+    if (!SW || SW.revealed) return;
+    var card = $("cmgCard"), info = $("cmgInfo"), m = SW.deck[SW.i];
+    if (!card || !info) return;
+    SW.revealed = true;
+    card.classList.remove("hidden-t");
+    card.setAttribute("aria-label", m.t + ", " + m.y + ". Arrow keys: right loved it, left not for me, up haven’t seen it.");
+    var hadFocus = info.contains(document.activeElement);
+    info.innerHTML = "<h3>" + esc(m.t) + "</h3><p>" + m.y + " · " + esc(m.g.join(", ")) + "</p>" +
+      '<button type="button" class="cmg-got" data-got aria-pressed="false">✓ I guessed it</button>';
+    var got = info.querySelector("[data-got]");
+    got.addEventListener("click", function () {
+      SW.gotIt = !SW.gotIt; got.setAttribute("aria-pressed", String(SW.gotIt));
+      got.textContent = SW.gotIt ? "✓ Guessed it!" : "✓ I guessed it";
+    });
+    if (hadFocus) got.focus({preventScroll: true});
   }
 
   function stamp(card, dx, dy) {
@@ -261,12 +292,14 @@
     card.addEventListener("dragstart", function (e) { e.preventDefault(); }); // no native image drag
     card.addEventListener("pointerdown", function (e) {
       if (e.button !== undefined && e.button !== 0) return;
+      if (e.target.closest && e.target.closest("button")) return; // let Reveal / I guessed it buttons click normally
       dragging = true; id = e.pointerId; sx = e.clientX; sy = e.clientY; dx = dy = 0;
       card.setPointerCapture(id); card.classList.add("drag");
     });
     card.addEventListener("pointermove", function (e) {
       if (!dragging || e.pointerId !== id) return;
       dx = e.clientX - sx; dy = e.clientY - sy;
+      if (!SW.revealed && Math.abs(dx) + Math.abs(dy) > 14) reveal(); // starting a swipe reveals the title
       card.style.transform = "translate(" + dx + "px," + Math.min(dy, 40) + "px) rotate(" + dx / 18 + "deg)";
       stamp(card, dx, dy);
     });
@@ -276,7 +309,10 @@
       if (dx > 90) decide("love");
       else if (dx < -90) decide("nope");
       else if (dy < -90 && Math.abs(dx) < 60) decide("skip");
-      else { card.style.transition = "transform .25s ease"; card.style.transform = ""; stamp(card, 0, 0); }
+      else {
+        card.style.transition = "transform .25s ease"; card.style.transform = ""; stamp(card, 0, 0);
+        if (Math.abs(dx) < 6 && Math.abs(dy) < 6) reveal(); // a tap on the card reveals the title
+      }
     }
     card.addEventListener("pointerup", end);
     card.addEventListener("pointercancel", end);
@@ -284,8 +320,10 @@
 
   function decide(kind) {
     var card = $("cmgCard"); if (!card || card.dataset.done) return;
+    reveal(); // rating before revealing still shows the title as the card flies off
     card.dataset.done = "1";
     var m = SW.deck[SW.i];
+    SW.seen++; if (SW.gotIt) SW.guessed++;
     if (kind === "love") { SW.ratings[m.id] = 5; SW.loved.push(m); }
     else if (kind === "nope") { SW.ratings[m.id] = 1; SW.nope.push(m); }
     var go = function () { SW.i++; drawSwipe(); };
@@ -322,6 +360,7 @@
       "<p>" + esc(info[1]) + "</p>" +
       (p.genres.length ? '<div class="cmg-chips" aria-label="Your top genres">' + p.genres.map(function (g) { return "<span>" + esc(g) + "</span>"; }).join("") + "</div>" : "") +
       "<p><b>You loved:</b> " + loved + "</p>" +
+      (SW.seen ? "<p>✨ You guessed <b>" + SW.guessed + "</b> of " + SW.seen + " posters" + (SW.guessed === SW.seen && SW.seen >= 5 ? ". Perfect eye!" : ".") + "</p>" : "") +
       (prof.age ? "" :
         '<div class="cmg-form"><label>Your age<input id="cmgAge" type="number" min="5" max="99" inputmode="numeric" placeholder="e.g. 20"></label>' +
         '<label>Gender<select id="cmgGender"><option value="none">Prefer not to say</option><option value="female">Female</option><option value="male">Male</option><option value="other">Non-binary</option></select></label></div>') +
