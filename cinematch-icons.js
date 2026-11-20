@@ -1,6 +1,7 @@
 /* CineMatch icons: replaces emojis anywhere on the page with clean line icons (inline SVG).
    Icons: Lucide v0.460.0 (https://lucide.dev), ISC License, Copyright (c) Lucide Contributors.
-   GENERATED FILE. To add or change an icon, edit MAP below; paths come from lucide-static.
+   To add or change an icon: add an entry to MAP below (emoji: [icon name, colour tone, "fill"?])
+   and its SVG body to ICONS (copy from https://lucide.dev). Colour tones are defined in TONES.
    Load in <head>, before other scripts:  <script src="cinematch-icons.js"></script>
 
    How it works: a MutationObserver watches the document, so emojis in the HTML and in text added
@@ -64,7 +65,9 @@
    "hand": "<path d=\"M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2\" /><path d=\"M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2\" /><path d=\"M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8\" /><path d=\"M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15\" />",
    "zap": "<path d=\"M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z\" />"
   };
-  var MAP = {"🎬":["clapperboard"],"🎞":["film"],"🎲":["dices"],"🔍":["search"],"⭐":["star","fill"],"🍿":["popcorn"],"🔀":["shuffle"],"📋":["clipboard-copy"],"▶":["play","fill"],"📺":["tv"],"♡":["heart"],"♥":["heart","fill"],"💕":["heart","fill"],"😄":["smile"],"😢":["frown"],"🔥":["flame"],"😌":["coffee"],"🧠":["brain"],"😱":["skull"],"💪":["trophy"],"🎭":["drama"],"💥":["bomb"],"🚀":["rocket"],"😂":["laugh"],"👻":["ghost"],"✨":["sparkles"],"🔪":["eye"],"🕵":["fingerprint"],"🧙":["wand-sparkles"],"👨‍👩‍👧":["users-round"],"🎶":["music-4"],"🎵":["music"],"🧭":["compass"],"🎤":["mic-vocal"],"🎟":["ticket"],"🎥":["video"],"👍":["thumbs-up"],"😐":["meh"],"👎":["thumbs-down"],"🔒":["lock"],"📊":["chart-column"],"👥":["users"],"✉":["mail"],"📧":["mail"],"💬":["message-circle"],"⚙":["settings"],"🗄":["database"],"⬇":["download"],"⬆":["upload"],"🔗":["share-2"],"🎉":["party-popper"],"🗑":["trash-2"],"❓":["circle-help"],"👋":["hand"],"⚡":["zap"]};
+  var MAP = {"🎬":["clapperboard","brand"],"🎞":["film","brand"],"🎲":["dices","brand"],"🔍":["search","brand"],"⭐":["star","sun","fill"],"🍿":["popcorn","brand"],"🔀":["shuffle","brand"],"📋":["clipboard-copy","brand"],"▶":["play","brand","fill"],"📺":["tv","sky"],"♡":["heart","rose"],"♥":["heart","rose","fill"],"💕":["heart","rose","fill"],"😄":["smile","sun"],"😢":["frown","sky"],"🔥":["flame","flame"],"😌":["coffee","teal"],"🧠":["brain","violet"],"😱":["skull","lime"],"💪":["trophy","sun"],"🎭":["drama","violet"],"💥":["bomb","flame"],"🚀":["rocket","teal"],"😂":["laugh","sun"],"👻":["ghost","lime"],"✨":["sparkles","sun"],"🔪":["eye","violet"],"🕵":["fingerprint","sky"],"🧙":["wand-sparkles","violet"],"👨‍👩‍👧":["users-round","sun"],"🎶":["music-4","rose"],"🎵":["music","sky"],"🧭":["compass","mint"],"🎤":["mic-vocal","rose"],"🎟":["ticket","brand"],"🎥":["video","brand"],"👍":["thumbs-up","mint"],"😐":["meh","sun"],"👎":["thumbs-down","rose"],"🔒":["lock","brand"],"📊":["chart-column","brand"],"👥":["users","brand"],"✉":["mail","brand"],"📧":["mail","brand"],"💬":["message-circle","brand"],"⚙":["settings","brand"],"🗄":["database","brand"],"⬇":["download","mint"],"⬆":["upload","sky"],"🔗":["share-2","brand"],"🎉":["party-popper","sun"],"🗑":["trash-2","flame"],"❓":["circle-help","brand"],"👋":["hand","sun"],"⚡":["zap","sun"]};
+  var TONES = {"brand":["#ffe08a","#ffb627","#ff5d73"],"sun":["#fff3b0","#fcd34d","#f59e0b"],"sky":["#c7e3ff","#7cb8ff","#5b7cfa"],"flame":["#ffd6a5","#ff8a4c","#ff4d5e"],"rose":["#ffd1dc","#ff7a9c","#f0437a"],"violet":["#e4d9ff","#b49cff","#8b6cf6"],"lime":["#e3fba8","#a3e635","#34c76f"],"teal":["#b5f5ff","#4fd8eb","#14b8a6"],"mint":["#c6f7dc","#4ade9a","#10b981"]};
+  var SOLID = ".btn:not(.ghost),.ad-btn:not(.ghost),.cx-btn:not(.ghost),.ad-nav button.on,.bw-mood.on,.bw-i.on,.chip input:checked+span,.cx-av,.cx-chat-btn,.cx-me,.cx-nav .cx-pill,[aria-pressed=true],.cx-send button,.cx-skip,.pg-btn[aria-current],.totop";
 
   window.CMIcon = function (name, cls) {
     return '<svg class="cm-i' + (cls ? " " + cls : "") + '" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + (ICONS[name] || "") + "</svg>";
@@ -75,10 +78,50 @@
   var TEXT_ONLY = {OPTION: 1, TITLE: 1};
   var SKIP = {SCRIPT: 1, STYLE: 1, TEXTAREA: 1, NOSCRIPT: 1, CODE: 1, PRE: 1};
 
-  var css = ".cm-i{display:inline-block;width:1.15em;height:1.15em;vertical-align:-.2em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none;overflow:visible}" +
-    ".cm-i.fill{fill:currentColor}.cm-i.sp{margin-inline-end:.4em}" +
-    "h1 .cm-i,h2 .cm-i,h3 .cm-i,legend .cm-i{color:var(--amber,#ffb627)}" +
-    ".btn.coral .cm-i,.btn:not(.ghost) .cm-i{color:inherit}";
+  /* Look: each icon is painted with a theme gradient (see TONES). On solid buttons/chips it switches
+     to the element's text colour so it stays readable. Large icons get a soft tinted tile and glow. */
+  var rgb = function (h) { return [1, 3, 5].map(function (i) { return parseInt(h.substr(i, 2), 16); }).join(","); };
+  var css = ".cm-i{display:inline-block;width:1.15em;height:1.15em;vertical-align:-.2em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none;overflow:visible;transition:transform .18s ease,filter .18s ease}" +
+    ".cm-i.fill{fill:currentColor}.cm-i.sp{margin-inline-end:.4em}";
+  Object.keys(TONES).forEach(function (k) {
+    var c = TONES[k][1];
+    css += ".cm-i.t-" + k + "{stroke:url(#cmg-" + k + ") " + c + "}.cm-i.fill.t-" + k + "{fill:url(#cmg-" + k + ") " + c + "}" +
+      ".cm-tile:has(.t-" + k + "){--tint:rgba(" + rgb(c) + ",.15);--ring:rgba(" + rgb(c) + ",.32);--glow:rgba(" + rgb(c) + ",.55)}";
+  });
+  var solid = SOLID.split(",");
+  css += solid.map(function (x) { return x + " .cm-i"; }).join(",") + "{stroke:currentColor!important;filter:none!important}" +
+    solid.map(function (x) { return x + " .cm-i.fill"; }).join(",") + "{fill:currentColor!important}" +
+    /* headings: a little glow */
+    "h1 .cm-i,h2 .cm-i{filter:drop-shadow(0 2px 10px rgba(255,140,70,.45))}" +
+    /* large icon tiles: mood tiles and How-it-works steps */
+    ".cm-tile{display:inline-grid!important;place-items:center;width:3.25rem;height:3.25rem;margin:0 auto 4px;border-radius:16px;font-size:1rem!important;line-height:1!important;" +
+      "background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.10),transparent 60%),var(--tint,rgba(255,182,39,.15));" +
+      "box-shadow:inset 0 0 0 1px var(--ring,rgba(255,182,39,.3)),0 8px 22px -12px var(--glow,rgba(255,140,70,.6));transition:transform .2s ease,box-shadow .2s ease}" +
+    ".cm-tile .cm-i{width:1.7rem;height:1.7rem;vertical-align:0;margin:0!important;filter:drop-shadow(0 2px 6px var(--glow,rgba(255,140,70,.5)))}" +
+    ".chip:hover .cm-tile,.cx-step:hover .cm-tile{transform:translateY(-3px) scale(1.06);box-shadow:inset 0 0 0 1px var(--ring,rgba(255,182,39,.3)),0 14px 26px -10px var(--glow,rgba(255,140,70,.6))}" +
+    ".chip input:checked+span .cm-tile{background:rgba(27,20,48,.16);box-shadow:inset 0 0 0 1px rgba(27,20,48,.18)}" +
+    /* hover lift on interactive icons */
+    "a:hover>.cm-i,button:hover>.cm-i,label:hover>span>.cm-i{transform:translateY(-1px) scale(1.12)}" +
+    "@media(prefers-reduced-motion:reduce){.cm-i,.cm-tile{transition:none}a:hover>.cm-i,button:hover>.cm-i,label:hover>span>.cm-i,.chip:hover .cm-tile,.cx-step:hover .cm-tile{transform:none}}";
+
+  /* gradient definitions shared by every icon (user-space coordinates so straight lines render too) */
+  function addDefs() {
+    if (document.getElementById("cmIconDefs") || !document.body) return;
+    var h = '<svg id="cmIconDefs" width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false"><defs>';
+    Object.keys(TONES).forEach(function (k) {
+      var t = TONES[k];
+      h += '<linearGradient id="cmg-' + k + '" gradientUnits="userSpaceOnUse" x1="3" y1="2" x2="21" y2="22">' +
+        '<stop offset="0" stop-color="' + t[0] + '"/><stop offset=".45" stop-color="' + t[1] + '"/><stop offset="1" stop-color="' + t[2] + '"/></linearGradient>';
+    });
+    document.body.insertAdjacentHTML("afterbegin", h + "</defs></svg>");
+  }
+  /* put the big icon of mood tiles and How-it-works steps on a tinted tile */
+  function tiles(root) {
+    if (!root || !root.querySelectorAll) return;
+    root.querySelectorAll(".tiles .chip em, .cx-step > b").forEach(function (el) {
+      if (!el.classList.contains("cm-tile") && el.querySelector(".cm-i")) el.classList.add("cm-tile");
+    });
+  }
   var st = document.createElement("style"); st.id = "cmIconCss"; st.textContent = css;
   (document.head || document.documentElement).appendChild(st);
 
@@ -92,7 +135,7 @@
     while ((m = RE.exec(t))) {
       if (m.index > last) frag.appendChild(document.createTextNode(t.slice(last, m.index)));
       var d = MAP[m[1]], tpl = document.createElement("template");
-      tpl.innerHTML = window.CMIcon(d[0], (d[1] || "") + " i-" + d[0] + (m[2] && m.index + m[0].length < t.length ? " sp" : ""));
+      tpl.innerHTML = window.CMIcon(d[0], "t-" + d[1] + (d[2] ? " " + d[2] : "") + " i-" + d[0] + (m[2] && m.index + m[0].length < t.length ? " sp" : ""));
       if (m[2] && m.index + m[0].length >= t.length) frag.appendChild(document.createTextNode(" "));
       frag.appendChild(tpl.content.firstChild);
       last = RE.lastIndex;
@@ -112,9 +155,10 @@
     for (var i = 0; i < muts.length; i++) {
       var m = muts[i];
       if (m.type === "characterData") fix(m.target);
-      else for (var j = 0; j < m.addedNodes.length; j++) scan(m.addedNodes[j]);
+      else for (var j = 0; j < m.addedNodes.length; j++) { scan(m.addedNodes[j]); tiles(m.addedNodes[j]); }
+      if (m.type === "childList" && m.target.closest) { var c = m.target.closest(".tiles, .cx-step"); if (c) tiles(c.parentNode || c); }
     }
   }).observe(document.documentElement, {childList: true, subtree: true, characterData: true});
-  scan(document.documentElement);
-  document.addEventListener("DOMContentLoaded", function () { scan(document.documentElement); });
+  scan(document.documentElement); addDefs();
+  document.addEventListener("DOMContentLoaded", function () { addDefs(); scan(document.documentElement); tiles(document); });
 })();
