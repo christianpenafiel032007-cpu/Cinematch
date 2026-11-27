@@ -292,11 +292,10 @@ footer::before{content:"";position:absolute;top:0;left:50%;width:min(480px,70%);
 <div class="fox fox-l" aria-hidden="true"></div><div class="fox fox-r" aria-hidden="true"></div>
 <div id="loading" class="loading hidden" role="status"><div class="reel">🎞️</div><p>Finding viewers like you…</p></div>
 
-<header class="top"><a class="logo" href="#">Cine<span>Match</span></a><p>No sign-up. Tell us a bit about you and get your next movie.</p></header>
+<header class="top"><a class="logo" href="#">Cine<span>Match</span></a><p>No sign-up. Tell us a bit about you and get your next movie, <b class="cf-hdr">using collaborative filtering</b>.</p></header>
 <main>
 <div class="hero-img"><img id="heroImg" alt="Cartoon foxes eating popcorn in a cinema" src="hero.jpg" onerror="var n=['hero.png','hero.jpeg','hero.webp'],i=+(this.dataset.i||0);if(i<n.length){this.dataset.i=i+1;this.src=n[i];}else{this.style.display='none';}"></div>
 <section class="hero">
-  <h1>Your next favorite movie is one mood away.</h1>
   <p>Answer a few quick questions. CineMatch finds viewers like you and shows what they loved.</p>
   <div class="hero-cta">
     <a class="btn lg" href="#quiz">🎬 Start the quiz</a>
@@ -309,7 +308,7 @@ footer::before{content:"";position:absolute;top:0;left:50%;width:min(480px,70%);
   <h2>🔍 Search movies</h2>
   <div class="search-box">
     <span class="ico" aria-hidden="true">🔍</span>
-    <input id="movieSearch" type="search" placeholder="Search by title, genre, year or mood…" autocomplete="off" aria-label="Search movies">
+    <input id="movieSearch" type="search" placeholder="Search by title, genre or mood…" autocomplete="off" aria-label="Search movies">
     <button id="srClear" class="sr-clear hidden" type="button" aria-label="Clear search">✕</button>
   </div>
   <p id="srNote" class="sr-note" aria-live="polite"></p>
@@ -478,7 +477,23 @@ const MOVIES = [
   {id:100, d:"A man whose marriage is falling apart gets dating lessons from a smooth-talking bachelor.", t:"Crazy, Stupid, Love.", y:2011, g:["Comedy","Romance"], m:["happy","romantic"], min:13},
   {id:101, d:"Years after their last goodbye, two Filipino lovers meet again in Canada and must face what they left unsaid.", t:"Hello, Love, Again", y:2024, g:["Romance","Drama"], m:["romantic","sad"], min:13},
   {id:102, d:"A heartbroken man and his best friend share a quiet journey of feelings in the streets of Barcelona.", t:"Barcelona: A Love Untold", y:2016, g:["Romance","Drama"], m:["romantic","sad"], min:13},
-  {id:103, d:"After a long relationship ends, a young man and woman each struggle to move on and to learn what real love means.", t:"One More Chance", y:2007, g:["Romance","Drama"], m:["romantic","sad"], min:13}
+  {id:103, d:"After a long relationship ends, a young man and woman each struggle to move on and to learn what real love means.", t:"One More Chance", y:2007, g:["Romance","Drama"], m:["romantic","sad"], min:13},
+  {id:104, d:"A giant, gentle rabbit is pushed too far by three bullying rodents and plans a very creative payback. Free to watch (Blender Foundation, CC-BY).", t:"Big Buck Bunny", y:2008, g:["Animation","Comedy","Family"], m:["happy","calm"], min:5},
+  {id:105, d:"A lonely young woman searches for her stolen baby dragon across a harsh fantasy world. Free to watch (Blender Foundation, CC-BY).", t:"Sintel", y:2010, g:["Animation","Fantasy"], m:["sad","excited","curious"], min:10},
+  {id:106, d:"In a future Amsterdam, a band of scientists and soldiers try to save the world from killer robots. Free to watch (Blender Foundation, CC-BY).", t:"Tears of Steel", y:2012, g:["Sci-Fi","Action"], m:["excited","curious"], min:10},
+  {id:107, d:"Strangers trapped in a farmhouse fight to survive a night besieged by the walking dead. Public domain classic.", t:"Night of the Living Dead", y:1968, g:["Horror"], m:["scared"], min:16},
+  {id:108, d:"A fast-talking newspaper editor tries to win back his ex-wife and star reporter before she remarries. Free to watch (public domain in the US).", t:"His Girl Friday", y:1940, g:["Comedy","Romance"], m:["happy","romantic"], min:10},
+  {id:109, d:"A widow on the run in Paris is chased by thieves after her husband's hidden fortune and relies on a charming stranger. Free to watch (public domain in the US).", t:"Charade", y:1963, g:["Mystery","Romance","Comedy"], m:["curious","romantic","happy"], min:12},
+  {id:110, d:"Aliens resurrect the dead to stop humanity from building a doomsday weapon. A cult-classic B-movie. Free to watch (public domain).", t:"Plan 9 from Outer Space", y:1959, g:["Sci-Fi","Horror"], m:["curious","happy"], min:10},
+  {id:111, d:"A tramp takes in an abandoned child and the two get by on charm and mischief. Free to watch (public domain).", t:"The Kid", y:1921, g:["Comedy","Drama"], m:["happy","sad"], min:5},
+  {id:112, d:"A railroad engineer chases the Union soldiers who stole his beloved locomotive across Civil War lines. Free to watch (public domain).", t:"The General", y:1926, g:["Comedy","Action","Adventure"], m:["happy","excited"], min:5},
+  {id:113, d:"After a car crash, a woman survives and is drawn to an eerie abandoned carnival while strange figures follow her. Free to watch (public domain).", t:"Carnival of Souls", y:1962, g:["Horror","Mystery"], m:["scared","curious"], min:13},
+  {id:114, d:"A broke pianist hitchhiking to Los Angeles gets tangled in a death that looks like murder. Free to watch (public domain).", t:"Detour", y:1945, g:["Crime","Thriller","Drama"], m:["curious","sad"], min:13},
+  {id:115, d:"A timid flower-shop clerk raises a plant that talks and demands blood. Free to watch (public domain).", t:"The Little Shop of Horrors", y:1960, g:["Comedy","Horror"], m:["happy","scared"], min:10},
+  {id:116, d:"A millionaire offers guests a fortune to survive one night in a haunted mansion with a gruesome past. Free to watch (public domain).", t:"House on Haunted Hill", y:1959, g:["Horror","Mystery"], m:["scared","excited"], min:13},
+  {id:117, d:"The last human survivor of a plague that turns people into vampire-like creatures hunts them by day and hides by night. Free to watch (public domain).", t:"The Last Man on Earth", y:1964, g:["Horror","Sci-Fi"], m:["scared","curious"], min:13},
+  {id:118, d:"A disfigured genius haunts the Paris Opera and obsesses over a young singer. Free to watch (public domain).", t:"The Phantom of the Opera", y:1925, g:["Horror","Romance","Drama"], m:["scared","romantic","sad"], min:10},
+  {id:119, d:"An alien arrives on Earth with a deadly secret and a young man tries to stop what he has brought. Free to watch (public domain).", t:"Teenagers from Outer Space", y:1959, g:["Sci-Fi"], m:["curious","happy"], min:10}
 ];
 
 // Existing "viewers" with their ratings (1–5). This is the community CineMatch learns from.
@@ -969,7 +984,7 @@ if ("IntersectionObserver" in window) {
 (function(){
   var g=function(i){return document.getElementById(i)};
   var inp=g("movieSearch"),grid=g("srGrid"),note=g("srNote"),clr=g("srClear");
-  var HINT="Try a title, genre, year or mood, like \u201Cromance\u201D, \u201C2019\u201D or \u201Cscared\u201D.";
+  var HINT="";
   function norm(x){return x.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")}
   function card(m){
     var st=STATS[m.id];
@@ -1050,3 +1065,9 @@ if ("IntersectionObserver" in window) {
 <script src="cinematch-boost.js"></script>
 <script src="cinematch-polish.js"></script>
 <script src="cinematch-browse.js"></script>
+<script src="cinematch-polish.js"></script>
+<script src="cinematch-paginate.js"></script>
+<script src="cinematch-game.js"></script>
+<script src="cinematch-icons.js"></script>
+<script src="cinematch-cf.js"></script>
+<script src="cinematch-watch.js"></script>
